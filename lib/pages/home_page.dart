@@ -1,164 +1,330 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:portfolio_site/data/portfolio_data.dart';
+import 'package:portfolio_site/theme/colors.dart';
+import 'package:portfolio_site/utils/viewport.dart';
+import 'package:portfolio_site/widgets/portfolio_button.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   final Key homeKey;
-  const HomePage({super.key, required this.homeKey});
+  final VoidCallback onContactTap;
+  final VoidCallback onProjectsTap;
+  final VoidCallback onResumeTap;
+
+  const HomePage({
+    super.key,
+    required this.homeKey,
+    required this.onContactTap,
+    required this.onProjectsTap,
+    required this.onResumeTap,
+  });
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
+  final String _fullCommand = r'$ flutter run anish.dart';
+  String _displayedCommand = '';
+  bool _cursorVisible = true;
+  Timer? _typeTimer;
+  Timer? _cursorTimer;
+  int _charIndex = 0;
+
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnim;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 800),
+    );
+    _fadeAnim = CurvedAnimation(parent: _fadeController, curve: Curves.easeOut);
+
+    Future.delayed(const Duration(milliseconds: 400), _startTyping);
+
+    _cursorTimer = Timer.periodic(const Duration(milliseconds: 530), (_) {
+      if (mounted) setState(() => _cursorVisible = !_cursorVisible);
+    });
+  }
+
+  void _startTyping() {
+    _typeTimer = Timer.periodic(const Duration(milliseconds: 60), (timer) {
+      if (_charIndex < _fullCommand.length) {
+        setState(() {
+          _displayedCommand = _fullCommand.substring(0, _charIndex + 1);
+          _charIndex++;
+        });
+      } else {
+        timer.cancel();
+        _fadeController.forward();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _typeTimer?.cancel();
+    _cursorTimer?.cancel();
+    _fadeController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final isMobile = MediaQuery.of(context).size.width < 800;
-    final padding = isMobile
-        ? EdgeInsets.symmetric(horizontal: 24 + 95.w)
-        : EdgeInsets.symmetric(horizontal: 95.w + 95.w);
+    final theme = Theme.of(context);
+    final mobile = isMobile(context);
+    final hPad = sectionHorizontalPadding(context);
+    final headlineSize = mobile ? 42.0 : 64.0;
+    final avatarSize = mobile ? 220.0 : 280.0;
 
     return Container(
-      key: homeKey,
-      padding: padding,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: 80.h),
-          isMobile
-              ? Column(
+      key: widget.homeKey,
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(
+        horizontal: hPad,
+        vertical: mobile ? 60.h : 80.h,
+      ),
+      color: theme.colorScheme.primary,
+      child: mobile
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildTerminalChip(context),
+                SizedBox(height: 32.h),
+                _buildHeroText(context, headlineSize, mobile),
+                SizedBox(height: 40.h),
+                _buildAvatar(context, avatarSize),
+                SizedBox(height: 40.h),
+                _buildCTARow(context),
+                SizedBox(height: 48.h),
+                _buildCompanyRow(context),
+              ],
+            )
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildTerminalChip(context),
+                SizedBox(height: 40.h),
+                Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    _buildImageSection(),
-                    SizedBox(height: 32.h),
-                    _buildTextSection(isMobile),
-                  ],
-                )
-              : Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(child: _buildTextSection(isMobile)),
-                    SizedBox(width: 32.w),
-                    _buildImageSection(),
+                    Expanded(
+                      flex: 6,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildHeroText(context, headlineSize, mobile),
+                          SizedBox(height: 40.h),
+                          _buildCTARow(context),
+                        ],
+                      ),
+                    ),
+                    SizedBox(width: 60.w),
+                    Expanded(
+                      flex: 4,
+                      child: Center(child: _buildAvatar(context, avatarSize)),
+                    ),
                   ],
                 ),
-          SizedBox(height: 57.h),
+                SizedBox(height: 64.h),
+                _buildCompanyRow(context),
+              ],
+            ),
+    );
+  }
+
+  Widget _buildTerminalChip(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(
+          color: theme.colorScheme.outline.withAlphaFraction(0.3),
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
           Text(
-            "Worked with",
-            style: GoogleFonts.ibmPlexMono(
-              fontSize: 14,
-              letterSpacing: 0.14,
+            _displayedCommand,
+            style: GoogleFonts.jetBrainsMono(
+              fontSize: 13,
+              color: AppColors.lime,
+              fontWeight: FontWeight.w500,
             ),
           ),
-          SizedBox(height: 20.h),
-          SizedBox(
-              height: 60.h,
-              child: ListView(scrollDirection: Axis.horizontal, children: [
-                companyContainer(context, title: "anka Ek"),
-                SizedBox(width: 10.w),
-                companyContainer(context, title: "Ayata Inc.")
-              ])),
-          SizedBox(height: 45.h),
+          AnimatedOpacity(
+            opacity: _cursorVisible ? 1.0 : 0.0,
+            duration: const Duration(milliseconds: 100),
+            child: Container(
+              width: 8,
+              height: 14,
+              color: AppColors.lime,
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildTextSection(bool isMobile) {
-    return Column(
-      crossAxisAlignment:
-          isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
-      children: [
-        Text(
-          "Anish Chaulagain",
-          style: GoogleFonts.raleway(
-            fontSize: 44,
-            letterSpacing: 0.44,
-            fontWeight: FontWeight.bold,
-          ),
-          textAlign: isMobile ? TextAlign.center : TextAlign.start,
-        ),
-        SizedBox(height: 10.h),
-        Text(
-          "Intro text: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-          style: GoogleFonts.ibmPlexMono(
-            fontSize: 14,
-            letterSpacing: 0.14,
-          ),
-          textAlign: isMobile ? TextAlign.center : TextAlign.start,
-        ),
-        SizedBox(height: 30.h),
-        Align(
-          alignment: isMobile ? Alignment.center : Alignment.centerLeft,
-          child: ElevatedButton(
-            style: ButtonStyle(
-              padding: WidgetStateProperty.all<EdgeInsets>(
-                const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+  Widget _buildHeroText(BuildContext context, double headlineSize, bool mobile) {
+    final theme = Theme.of(context);
+    return FadeTransition(
+      opacity: _fadeAnim,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          RichText(
+            text: TextSpan(
+              style: theme.textTheme.displaySmall?.copyWith(
+                fontSize: headlineSize,
+                fontWeight: FontWeight.w800,
+                color: theme.colorScheme.onPrimary,
+                height: 1.1,
+                letterSpacing: -2,
               ),
-              shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
-                ),
-              ),
-              backgroundColor: WidgetStateProperty.all<Color>(Colors.green),
-            ),
-            onPressed: () {},
-            child: FittedBox(
-              child: Row(
-                children: [
-                  Text(
-                    "Let's get started",
-                    style: GoogleFonts.ibmPlexMono(
-                      fontSize: 16,
-                      letterSpacing: 0.16,
-                    ),
+              children: [
+                const TextSpan(text: 'I build\n'),
+                TextSpan(
+                  text: 'beautiful\n',
+                  style: theme.textTheme.displaySmall?.copyWith(
+                    fontSize: headlineSize,
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.lime,
+                    height: 1.1,
+                    letterSpacing: -2,
                   ),
-                  SizedBox(width: 10.w),
-                  const Icon(
-                    Icons.arrow_forward_ios_outlined,
-                    size: 15,
-                  )
-                ],
+                ),
+                const TextSpan(text: 'Flutter apps.'),
+              ],
+            ),
+          ),
+          SizedBox(height: 12.h),
+          Text(
+            PortfolioData.title,
+            style: theme.textTheme.titleLarge?.copyWith(
+              color: theme.colorScheme.onPrimary.withAlphaFraction(0.75),
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          SizedBox(height: 20.h),
+          SizedBox(
+            width: mobile ? double.infinity : 520,
+            child: Text(
+              PortfolioData.professionalSummary,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onPrimary.withAlphaFraction(0.55),
+                height: 1.8,
               ),
             ),
           ),
-        )
-      ],
+        ],
+      ),
     );
   }
 
-  Widget _buildImageSection() {
+  Widget _buildAvatar(BuildContext context, double size) {
     return Container(
-      width: 350.r,
-      height: 350.r,
+      width: size,
+      height: size,
       decoration: const BoxDecoration(
         shape: BoxShape.circle,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black26,
-            blurRadius: 10,
-            offset: Offset(0, 4),
-          ),
-        ],
         image: DecorationImage(
           image: AssetImage('assets/images/my_image.jpeg'),
           fit: BoxFit.cover,
         ),
       ),
+      foregroundDecoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(color: AppColors.lime, width: 3),
+      ),
     );
   }
 
-  Widget companyContainer(BuildContext context, {required String title}) {
-    var theme = Theme.of(context);
-    return Container(
-      alignment: Alignment.center,
-      padding: EdgeInsets.symmetric(horizontal: 40.w),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(5),
+  Widget _buildCTARow(BuildContext context) {
+    return FadeTransition(
+      opacity: _fadeAnim,
+      child: Wrap(
+        spacing: 16,
+        runSpacing: 12,
+        children: [
+          PortfolioButton(
+            label: 'Get in touch',
+            trailingIcon: Icons.arrow_forward,
+            onTap: widget.onContactTap,
+          ),
+          PortfolioButton(
+            label: 'View projects',
+            variant: PortfolioButtonVariant.outline,
+            onTap: widget.onProjectsTap,
+          ),
+          PortfolioButton(
+            label: 'Download resume',
+            variant: PortfolioButtonVariant.ghost,
+            onTap: widget.onResumeTap,
+          ),
+        ],
       ),
-      child: Text(title,
-          style: GoogleFonts.ibmPlexMono(
-            color: theme.colorScheme.onSurface,
-            fontSize: 28,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 0.14,
-          )),
+    );
+  }
+
+  Widget _buildCompanyRow(BuildContext context) {
+    final theme = Theme.of(context);
+    return FadeTransition(
+      opacity: _fadeAnim,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'WORKED WITH',
+            style: theme.textTheme.labelMedium?.copyWith(
+              letterSpacing: 2,
+              color: theme.colorScheme.onPrimary.withAlphaFraction(0.35),
+            ),
+          ),
+          SizedBox(height: 16.h),
+          Wrap(
+            spacing: 12,
+            runSpacing: 8,
+            children: const [
+              _CompanyChip(name: 'Ankaek Pvt. Ltd.'),
+              _CompanyChip(name: 'Ayata Incorporation'),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _CompanyChip extends StatelessWidget {
+  final String name;
+
+  const _CompanyChip({required this.name});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      decoration: BoxDecoration(
+        border: Border.all(color: theme.colorScheme.outline.withAlphaFraction(0.3)),
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Text(
+        name,
+        style: theme.textTheme.labelLarge?.copyWith(
+          color: theme.colorScheme.onPrimary.withAlphaFraction(0.6),
+        ),
+      ),
     );
   }
 }

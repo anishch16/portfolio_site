@@ -1,79 +1,65 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  // -- Light Theme Colors --
-  static const lightPrimary = Color(0xFFFFFFFF); // pure white
-  static const lightOnPrimary = Color(0xFF121212); // almost black, softer than pure black
-  static const lightPrimaryContainer = Color(0xFF212121); // very dark gray instead of full black
-  static const lightOnPrimaryContainer = Color(0xFFF5F5F5); // light gray near white
+  // Accent (Swapped to Facebook Vibrant Blue & Deep Blue)
+  static const lime = Color(0xFF1877F2);     // Facebook Primary Blue
+  static const limeDeep = Color(0xFF0056B3); // Focused / Darker Press State Blue
 
-  static const lightSecondary = Color(0xFF03DAC6); // teal kept as is
-  static const lightOnSecondary = Color(0xFF000000); // pure black for clarity
-  static const lightSecondaryContainer = Color(0xFF66FFF9);
-  static const lightOnSecondaryContainer = Color(0xFF000000);
-
-  static const lightTertiary = Color(0xFF018786);
+  // Light Theme (Clean Facebook Light Palette)
+  static const lightPrimary = Color(0xFFF0F2F5); // Facebook Background Grey
+  static const lightOnPrimary = Color(0xFF050505); // High Contrast Dark Text
+  static const lightPrimaryContainer = Color(0xFF050505);
+  static const lightOnPrimaryContainer = Color(0xFFF0F2F5);
+  static const lightSecondary = Color(0xFF1877F2);
+  static const lightOnSecondary = Color(0xFFFFFFFF);
+  static const lightSecondaryContainer = Color(0xFFE7F3FF); // Light Blue Container
+  static const lightOnSecondaryContainer = Color(0xFF1877F2);
+  static const lightTertiary = Color(0xFF65676B); // Secondary Grey Text
   static const lightOnTertiary = Color(0xFFFFFFFF);
-  static const lightTertiaryContainer = Color(0xFF66FFF9);
-  static const lightOnTertiaryContainer = Color(0xFF000000);
-
-  static const lightError = Color(0xFFB00020);
+  static const lightTertiaryContainer = Color(0xFFE4E6EB);
+  static const lightOnTertiaryContainer = Color(0xFF050505);
+  static const lightError = Color(0xFFFA383E); // Facebook Error Red
   static const lightOnError = Color(0xFFFFFFFF);
-  static const lightErrorContainer = Color(0xFFFCD8DF);
-  static const lightOnErrorContainer = Color(0xFF370617);
+  static const lightErrorContainer = Color(0xFFFFEBEB);
+  static const lightOnErrorContainer = Color(0xFFFA383E);
+  static const lightSurface = Color(0xFFFFFFFF);
+  static const lightOnSurface = Color(0xFF050505);
+  static const lightSurfaceDim = Color(0xFFE4E6EB);
+  static const lightOutline = Color(0xFFCED0D4);
+  static const lightShadow = Color(0xFF000000);
+  static const lightScrim = Color(0x80000000);
+  static const lightInverseSurface = Color(0xFF050505);
+  static const lightOnInverseSurface = Color(0xFFF0F2F5);
+  static const lightInversePrimary = Color(0xFF1877F2);
 
-  static const lightBackground = Color(0xFFFFFFFF); // white background
-  static const lightOnBackground = Color(0xFF121212); // almost black text
-
-  static const lightSurface = Color(0xFFF6F6F6);
-  static const lightOnSurface = Color(0xFF121212);
-  static const lightSurfaceDim = Color(0xFFE0E0E0);
-  static const lightSurfaceBright = Color(0xFFFFFFFF);
-
-  static const lightOutline = Color(0xFF757575); // mid gray for outlines
-  static const lightShadow = Color(0xFF000000); // black shadow
-  static const lightScrim = Color(0x80000000); // 50% opacity black scrim
-
-  static const lightInverseSurface = Color(0xFF121212); // dark background for inverse
-  static const lightOnInverseSurface = Color(0xFFF5F5F5); // light gray
-  static const lightInversePrimary = Color(0xFFFFFFFF);
-  static const lightSurfaceTint = Color(0xFFFFFFFF);
-
-  // -- Dark Theme Colors --
-  static const darkPrimary = Color(0xFF121212); // very dark gray, softer than black
-  static const darkOnPrimary = Color(0xFFF5F5F5); // light gray
-  static const darkPrimaryContainer = Color(0xFFE0E0E0); // light gray container
-  static const darkOnPrimaryContainer = Color(0xFF121212);
-
-  static const darkSecondary = Color(0xFF03DAC6);
-  static const darkOnSecondary = Color(0xFF000000);
-  static const darkSecondaryContainer = Color(0xFF005047);
-  static const darkOnSecondaryContainer = Color(0xFFFFFFFF);
-
-  static const darkTertiary = Color(0xFF03DAC6);
-  static const darkOnTertiary = Color(0xFF000000);
-  static const darkTertiaryContainer = Color(0xFF005047);
-  static const darkOnTertiaryContainer = Color(0xFFFFFFFF);
-
-  static const darkError = Color(0xFFCF6679);
-  static const darkOnError = Color(0xFF000000);
-  static const darkErrorContainer = Color(0xFFB1384D);
-  static const darkOnErrorContainer = Color(0xFFFFFFFF);
-
-  static const darkBackground = Color(0xFF121212);
-  static const darkOnBackground = Color(0xFFF5F5F5);
-
-  static const darkSurface = Color(0xFF212121); // dark gray surface
-  static const darkOnSurface = Color(0xFFF5F5F5);
-  static const darkSurfaceDim = Color(0xFF1E1E1E);
-  static const darkSurfaceBright = Color(0xFF2C2C2C);
-
-  static const darkOutline = Color(0xFF8F8F8F);
-  static const darkShadow = Color(0xDE000000); // 87% opacity black
+  // Dark Theme (Rich Deep Midnight Facebook Dark Base)
+  static const darkPrimary = Color(0xFF18191A); // Facebook Dark Surface
+  static const darkOnPrimary = Color(0xFFE4E6EB);
+  static const darkPrimaryContainer = Color(0xFF242526); // Facebook Card Dark Grey
+  static const darkOnPrimaryContainer = Color(0xFFE4E6EB);
+  static const darkSecondary = Color(0xFF1877F2); // Punchy Facebook Blue
+  static const darkOnSecondary = Color(0xFFFFFFFF);
+  static const darkSecondaryContainer = Color(0xFF263951); // Dark Blue Interactive Fill
+  static const darkOnSecondaryContainer = Color(0xFF4599FF);
+  static const darkTertiary = Color(0xFFB0B3B8); // Muted Dark Grey Text
+  static const darkOnTertiary = Color(0xFF18191A);
+  static const darkTertiaryContainer = Color(0xFF3A3B3C);
+  static const darkOnTertiaryContainer = Color(0xFFE4E6EB);
+  static const darkError = Color(0xFFFA383E);
+  static const darkOnError = Color(0xFFFFFFFF);
+  static const darkErrorContainer = Color(0xFF511F21);
+  static const darkOnErrorContainer = Color(0xFFFFEBEB);
+  static const darkSurface = Color(0xFF18191A); // Solid Dark Mode Background
+  static const darkOnSurface = Color(0xFFE4E6EB);
+  static const darkSurfaceDim = Color(0xFF0F0F10);
+  static const darkOutline = Color(0xFF3A3B3C);
+  static const darkShadow = Color(0xDE000000);
   static const darkScrim = Color(0xDE000000);
+  static const darkInverseSurface = Color(0xFFE4E6EB);
+  static const darkOnInverseSurface = Color(0xFF18191A);
+  static const darkInversePrimary = Color(0xFF18191A);
+}
 
-  static const darkInverseSurface = Color(0xFFF5F5F5);
-  static const darkOnInverseSurface = Color(0xFF121212);
-  static const darkInversePrimary = Color(0xFF121212);
-  static const darkSurfaceTint = Color(0xFF121212);
+extension PortfolioColorAlpha on Color {
+  Color withAlphaFraction(double alpha) => withValues(alpha: alpha);
 }

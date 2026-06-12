@@ -1,127 +1,91 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:portfolio_site/data/portfolio_data.dart';
+import 'package:portfolio_site/theme/colors.dart';
+import 'package:portfolio_site/utils/url_utils.dart';
+import 'package:portfolio_site/utils/viewport.dart';
+import 'package:portfolio_site/widgets/portfolio_button.dart';
+import 'package:portfolio_site/widgets/section_label.dart';
+import 'package:portfolio_site/widgets/social_links_row.dart';
 
 class ContactsPage extends StatelessWidget {
   final Key contactsKey;
+
   const ContactsPage({super.key, required this.contactsKey});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isMobile = MediaQuery.of(context).size.width < 800;
-    final padding = EdgeInsets.symmetric(
-        horizontal: isMobile ? 120.w : 190.w, vertical: 80.h);
+    final mobile = isMobile(context);
+    final hPad = sectionHorizontalPadding(context);
+    final headlineSize = mobile ? 32.0 : 44.0;
 
     return Container(
       key: contactsKey,
-      padding: padding,
+      padding: EdgeInsets.symmetric(horizontal: hPad, vertical: 80.h),
       color: theme.colorScheme.surface,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const SectionLabel(label: 'CONTACT'),
+          SizedBox(height: 16.h),
           Text(
-            "Get in touch",
-            style: GoogleFonts.raleway(
-              fontSize: 44,
-              letterSpacing: 0.44,
-              fontWeight: FontWeight.bold,
+            "Let's build something",
+            style: theme.textTheme.displaySmall?.copyWith(
+              fontSize: headlineSize,
+              fontWeight: FontWeight.w700,
+              color: theme.colorScheme.onSurface,
+              letterSpacing: -1.5,
             ),
-            textAlign: TextAlign.center,
           ),
-          SizedBox(height: 20.h),
+          SizedBox(height: 16.h),
           SizedBox(
-            width: isMobile ? double.infinity : 600.w,
+            width: mobile ? double.infinity : 560,
             child: Text(
-              "Solving user & business problems since last 15+ years. Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
-              style: GoogleFonts.ibmPlexMono(
-                fontSize: 14,
-                letterSpacing: 0.14,
+              PortfolioData.contactBio,
+              style: theme.textTheme.bodyLarge?.copyWith(
+                color: theme.colorScheme.onSurface.withAlphaFraction(0.65),
               ),
-              textAlign: TextAlign.center,
             ),
           ),
-          SizedBox(height: 60.h),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 250.w),
-            child: Column(
-              children: [
-                TextField(
-                  cursorColor: theme.colorScheme.onPrimary,
-                  decoration: InputDecoration(
-                    border: const OutlineInputBorder(),
-                    focusedBorder: const OutlineInputBorder(),
-                    enabledBorder: const OutlineInputBorder(),
-                    errorBorder: const OutlineInputBorder(),
-                    focusedErrorBorder: const OutlineInputBorder(),
-                    fillColor: theme.colorScheme.primary,
-                    hintText: 'Enter your name',
-                  ),
-                ),
-                SizedBox(height: 20.h),
-                TextField(
-                  cursorColor: theme.colorScheme.onPrimary,
-                  decoration: InputDecoration(
-                    border: const OutlineInputBorder(),
-                    focusedBorder: const OutlineInputBorder(),
-                    enabledBorder: const OutlineInputBorder(),
-                    errorBorder: const OutlineInputBorder(),
-                    focusedErrorBorder: const OutlineInputBorder(),
-                    fillColor: theme.colorScheme.primary,
-                    hintText: 'Enter Email Address',
-                  ),
-                ),
-                SizedBox(height: 20.h),
-                TextFormField(
-                  maxLines: 5,
-                  cursorColor: theme.colorScheme.onPrimary,
-                  decoration: InputDecoration(
-                    border: const OutlineInputBorder(),
-                    focusedBorder: const OutlineInputBorder(),
-                    enabledBorder: const OutlineInputBorder(),
-                    errorBorder: const OutlineInputBorder(),
-                    focusedErrorBorder: const OutlineInputBorder(),
-                    fillColor: theme.colorScheme.primary,
-                    hintText: 'Enter your message',
-                  ),
-                ),
-                SizedBox(height: 20.h),
-                ElevatedButton(
-                  style: ButtonStyle(
-                    padding: WidgetStateProperty.all<EdgeInsets>(
-                      const EdgeInsets.symmetric(
-                          horizontal: 30, vertical: 20),
-                    ),
-                    shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                    ),
-                    backgroundColor:
-                        WidgetStateProperty.all<Color>(Colors.green),
-                  ),
-                  onPressed: () {},
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Submit",
-                        style: GoogleFonts.ibmPlexMono(
-                          fontSize: 16,
-                          letterSpacing: 0.16,
-                        ),
-                      ),
-                      SizedBox(width: 10.w),
-                      const Icon(
-                        Icons.arrow_forward_ios_outlined,
-                        size: 15,
-                      )
-                    ],
-                  ),
-                )
-              ],
+          SizedBox(height: 12.h),
+          Text(
+            '${PortfolioData.location} · ${PortfolioData.phone}',
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurface.withAlphaFraction(0.45),
             ),
-          )
+          ),
+          SizedBox(height: 40.h),
+          Wrap(
+            spacing: 16,
+            runSpacing: 12,
+            children: [
+              PortfolioButton(
+                label: 'Email me',
+                trailingIcon: Icons.mail_outline,
+                onTap: () => openEmail(
+                  PortfolioData.email,
+                  subject: 'Portfolio inquiry',
+                ),
+              ),
+              PortfolioButton(
+                label: 'Call me',
+                variant: PortfolioButtonVariant.outline,
+                trailingIcon: Icons.phone_outlined,
+                onTap: () => openPhone(PortfolioData.phone),
+              ),
+            ],
+          ),
+          SizedBox(height: 32.h),
+          Text(
+            'Find me online',
+            style: theme.textTheme.labelMedium?.copyWith(
+              color: theme.colorScheme.onSurface.withAlphaFraction(0.45),
+              letterSpacing: 1.5,
+            ),
+          ),
+          SizedBox(height: 16.h),
+          const SocialLinksRow(),
         ],
       ),
     );

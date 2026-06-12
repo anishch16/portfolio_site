@@ -1,51 +1,115 @@
 import 'package:flutter/material.dart';
-import 'package:portfolio_site/theme/colors.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'colors.dart';
 
-ThemeData buildLightTheme( ){
+TextTheme _buildTextTheme(Color displayColor, Color bodyColor) {
+  return TextTheme(
+    displayLarge: GoogleFonts.dmSans(
+      fontSize: 72,
+      fontWeight: FontWeight.w800,
+      color: displayColor,
+      letterSpacing: -2,
+      height: 1.05,
+    ),
+    displayMedium: GoogleFonts.dmSans(
+      fontSize: 52,
+      fontWeight: FontWeight.w700,
+      color: displayColor,
+      letterSpacing: -1.5,
+      height: 1.1,
+    ),
+    displaySmall: GoogleFonts.dmSans(
+      fontSize: 38,
+      fontWeight: FontWeight.w700,
+      color: displayColor,
+      letterSpacing: -1,
+      height: 1.15,
+    ),
+    headlineLarge: GoogleFonts.dmSans(
+      fontSize: 32,
+      fontWeight: FontWeight.w700,
+      color: displayColor,
+      letterSpacing: -0.5,
+    ),
+    headlineMedium: GoogleFonts.dmSans(
+      fontSize: 24,
+      fontWeight: FontWeight.w600,
+      color: displayColor,
+      letterSpacing: -0.3,
+    ),
+    titleLarge: GoogleFonts.dmSans(
+      fontSize: 18,
+      fontWeight: FontWeight.w600,
+      color: displayColor,
+    ),
+    bodyLarge: GoogleFonts.nunito(
+      fontSize: 16,
+      color: bodyColor,
+      height: 1.75,
+    ),
+    bodyMedium: GoogleFonts.nunito(
+      fontSize: 14,
+      color: bodyColor,
+      height: 1.7,
+    ),
+    labelLarge: GoogleFonts.nunito(
+      fontSize: 13,
+      fontWeight: FontWeight.w600,
+      color: bodyColor,
+      letterSpacing: 0.3,
+    ),
+    labelMedium: GoogleFonts.nunito(
+      fontSize: 11,
+      fontWeight: FontWeight.w600,
+      color: bodyColor,
+      letterSpacing: 0.5,
+    ),
+  );
+}
+
+ThemeData buildLightTheme() {
   return ThemeData(
     brightness: Brightness.light,
+    useMaterial3: true,
     colorScheme: const ColorScheme.light(
-      primary: AppColors.lightPrimary, // white
-      onPrimary: AppColors.lightOnPrimary, // black
-      primaryContainer: AppColors.lightPrimaryContainer, // black
-      onPrimaryContainer: AppColors.lightOnPrimaryContainer, // white
-
-      secondary: AppColors.lightSecondary, // teal or black if changed
-      onSecondary: AppColors.lightOnSecondary, // black or white
+      primary: AppColors.lightPrimary,
+      onPrimary: AppColors.lightOnPrimary,
+      primaryContainer: AppColors.lightPrimaryContainer,
+      onPrimaryContainer: AppColors.lightOnPrimaryContainer,
+      secondary: AppColors.lightSecondary,
+      onSecondary: AppColors.lightOnSecondary,
       secondaryContainer: AppColors.lightSecondaryContainer,
       onSecondaryContainer: AppColors.lightOnSecondaryContainer,
-
       tertiary: AppColors.lightTertiary,
       onTertiary: AppColors.lightOnTertiary,
       tertiaryContainer: AppColors.lightTertiaryContainer,
       onTertiaryContainer: AppColors.lightOnTertiaryContainer,
-
       error: AppColors.lightError,
       onError: AppColors.lightOnError,
       errorContainer: AppColors.lightErrorContainer,
       onErrorContainer: AppColors.lightOnErrorContainer,
-
       surface: AppColors.lightSurface,
       onSurface: AppColors.lightOnSurface,
-      surfaceContainerHighest:
-          AppColors.lightSurfaceDim, // optional, for variant surfaces
-      onSurfaceVariant: AppColors.lightOnSurface, // reuse black
-
+      surfaceContainerHighest: AppColors.lightSurfaceDim,
+      onSurfaceVariant: AppColors.lightOnSurface,
       outline: AppColors.lightOutline,
       shadow: AppColors.lightShadow,
       scrim: AppColors.lightScrim,
-
       inverseSurface: AppColors.lightInverseSurface,
       onInverseSurface: AppColors.lightOnInverseSurface,
       inversePrimary: AppColors.lightInversePrimary,
     ),
-    useMaterial3: true,
+    textTheme: _buildTextTheme(
+      AppColors.lightOnPrimary,
+      const Color(0xFF444444),
+    ),
   );
 }
 
 ThemeData buildDarkTheme() {
   return ThemeData(
     brightness: Brightness.dark,
+    useMaterial3: true,
     colorScheme: const ColorScheme.dark(
       primary: AppColors.darkPrimary,
       onPrimary: AppColors.darkOnPrimary,
@@ -74,6 +138,9 @@ ThemeData buildDarkTheme() {
       onInverseSurface: AppColors.darkOnInverseSurface,
       inversePrimary: AppColors.darkInversePrimary,
     ),
-    useMaterial3: true,
+    textTheme: _buildTextTheme(
+      AppColors.darkOnPrimary,
+      const Color(0xFFAAAAAA),
+    ),
   );
 }

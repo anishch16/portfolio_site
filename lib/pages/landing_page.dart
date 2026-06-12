@@ -1,24 +1,27 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:portfolio_site/pages/contacts.dart';
-import 'package:portfolio_site/pages/testimonials.dart';
-import '../widgets/navbar_text.dart';
+import 'package:portfolio_site/data/portfolio_data.dart';
+import 'package:portfolio_site/theme/colors.dart';
+import 'package:portfolio_site/utils/url_utils.dart';
+import 'package:portfolio_site/utils/viewport.dart';
+import 'package:portfolio_site/widgets/navbar_text.dart';
+import 'package:portfolio_site/widgets/portfolio_button.dart';
 import 'home_page.dart';
 import 'projects_page.dart';
+import 'skills_page.dart';
+import 'experience_page.dart';
+import 'contacts.dart';
 
 class LandingPage extends StatefulWidget {
   final ThemeMode themeMode;
-  final Color primaryColor;
   final VoidCallback onToggleTheme;
-  final Function(Color) onColorChange;
 
   const LandingPage({
     super.key,
     required this.themeMode,
-    required this.primaryColor,
     required this.onToggleTheme,
-    required this.onColorChange,
   });
 
   @override
@@ -29,234 +32,266 @@ class _LandingPageState extends State<LandingPage> {
   final ScrollController _scrollController = ScrollController();
   final homeKey = GlobalKey();
   final projectsKey = GlobalKey();
-  final testimonialKey = GlobalKey();
-  final recentWorkKey = GlobalKey();
+  final skillsKey = GlobalKey();
+  final experienceKey = GlobalKey();
   final contactKey = GlobalKey();
 
+  bool _scrolled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(() {
+      final isScrolled = _scrollController.offset > 40;
+      if (isScrolled != _scrolled) setState(() => _scrolled = isScrolled);
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   void scrollTo(GlobalKey key) {
+    final context = key.currentContext;
+    if (context == null) return;
     Scrollable.ensureVisible(
-      key.currentContext!,
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.easeInOut,
+      context,
+      duration: const Duration(milliseconds: 600),
+      curve: Curves.easeInOutCubic,
     );
   }
 
   @override
   Widget build(BuildContext context) {
     final isDark = widget.themeMode == ThemeMode.dark;
-    var theme = Theme.of(context);
+    final theme = Theme.of(context);
+    final mobile = isMobile(context);
+    final hPad = sectionHorizontalPadding(context);
 
     return Scaffold(
       backgroundColor: theme.colorScheme.primary,
-      drawer: _drawer(context),
-      floatingActionButton: IconButton(
-        icon: Icon(isDark ? Icons.light_mode : Icons.dark_mode),
-        onPressed: widget.onToggleTheme,
-      ),
-      body: Column(
+      drawer: mobile ? _buildDrawer(context) : null,
+      body: Stack(
         children: [
-          SizedBox(height: 16.h),
-          // ✅ Navbar
-          (MediaQuery.of(context).size.width > 1000)
-              ? Container(
-                  margin: EdgeInsets.symmetric(horizontal: 85.w).copyWith(bottom: 16.h),
-                  color: theme.colorScheme.surface,
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 95.w, vertical: 16.h),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      NavbarText(
-                        text: "Home",
-                        onTap: () => scrollTo(homeKey),
-                      ),
-                      NavbarText(
-                        text: "Projects",
-                        onTap: () => scrollTo(projectsKey),
-                      ),
-                      NavbarText(
-                        text: "Testimonials",
-                        onTap: () => scrollTo(testimonialKey),
-                      ),
-                      NavbarText(
-                        text: "Get In Touch",
-                        onTap: () => scrollTo(contactKey),
-                      ),
-                      Row(
-                        children: [
-                          IconButton(
-                            icon: const Icon(
-                              Icons.facebook,
-                              size: 18,
-                            ),
-                            onPressed: () {},
-                          ),
-                          IconButton(
-                            icon: const Icon(
-                              Icons.facebook,
-                              size: 18,
-                            ),
-                            onPressed: () {},
-                          ),
-                          IconButton(
-                            icon: const Icon(
-                              Icons.facebook,
-                              size: 18,
-                            ),
-                            onPressed: () {},
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                )
-              : Builder(
-                  builder: (context) => Align(
-                    alignment: Alignment.topLeft,
-                    child: IconButton(
-                      onPressed: () {
-                        if (Scaffold.of(context).isDrawerOpen) {
-                          Navigator.of(context).pop();
-                        } else {
-                          Scaffold.of(context).openDrawer();
-                        }
-                      },
-                      icon: Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.surface,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(Icons.menu),
-                      ),
-                    ),
-                  ),
+          SingleChildScrollView(
+            controller: _scrollController,
+            child: Column(
+              children: [
+                SizedBox(height: 72.h),
+                HomePage(
+                  homeKey: homeKey,
+                  onContactTap: () => scrollTo(contactKey),
+                  onProjectsTap: () => scrollTo(projectsKey),
+                  onResumeTap: () => openExternalUrl(PortfolioData.resumeUrl),
                 ),
-
-          // ✅ Body Sections
-          Expanded(
-            child: SingleChildScrollView(
-              controller: _scrollController,
-              child: Column(
-                children: [
-                  // 🔵 Home Section
-                  HomePage(homeKey: homeKey),
-                  // 🟢 Projects Section
-                  ProjectsPage(projectsKey: projectsKey),
-                  // 🟠 Testimonial Section
-                  Testimonials(testimonialsKey: testimonialKey),
-
-                  // 🟡 Contact Section
-                  ContactsPage(contactsKey: contactKey),
-                ],
-              ),
+                SkillsPage(skillsKey: skillsKey),
+                ProjectsPage(projectsKey: projectsKey),
+                ExperiencePage(experienceKey: experienceKey),
+                ContactsPage(contactsKey: contactKey),
+                _buildFooter(context, hPad),
+              ],
             ),
+          ),
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: _buildNavbar(context, isDark, mobile, _scrolled, hPad),
           ),
         ],
       ),
     );
   }
 
-  Drawer _drawer(BuildContext context) {
-    var theme = Theme.of(context);
+  Widget _buildNavbar(
+    BuildContext context,
+    bool isDark,
+    bool mobile,
+    bool scrolled,
+    double hPad,
+  ) {
+    final theme = Theme.of(context);
+    return ClipRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 250),
+          height: 64.h,
+          decoration: BoxDecoration(
+            color: theme.colorScheme.primary.withAlphaFraction(scrolled ? 0.88 : 0.6),
+            border: scrolled
+                ? Border(
+                    bottom: BorderSide(
+                      color: theme.colorScheme.outline.withAlphaFraction(0.3),
+                      width: 1,
+                    ),
+                  )
+                : null,
+          ),
+          padding: EdgeInsets.symmetric(horizontal: hPad),
+          child: Row(
+            children: [
+              Text(
+                'AC.',
+                style: GoogleFonts.dmSans(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.lime,
+                  letterSpacing: -1,
+                ),
+              ),
+              if (!mobile) ...[
+                const Spacer(),
+                Flexible(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        NavbarText(
+                            text: 'Home', onTap: () => scrollTo(homeKey)),
+                        NavbarText(
+                            text: 'Skills', onTap: () => scrollTo(skillsKey)),
+                        NavbarText(
+                          text: 'Projects',
+                          onTap: () => scrollTo(projectsKey),
+                        ),
+                        NavbarText(
+                          text: 'Experience',
+                          onTap: () => scrollTo(experienceKey),
+                        ),
+                        NavbarText(
+                          text: 'Contact',
+                          onTap: () => scrollTo(contactKey),
+                        ),
+                        const SizedBox(width: 8),
+                        PortfolioButton(
+                          label: 'Resume',
+                          variant: PortfolioButtonVariant.ghost,
+                          compact: true,
+                          onTap: () => openExternalUrl(PortfolioData.resumeUrl),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 16),
+              ] else
+                const Spacer(),
+              GestureDetector(
+                onTap: widget.onToggleTheme,
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  width: 44,
+                  height: 24,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: isDark ? AppColors.lime : theme.colorScheme.outline,
+                  ),
+                  child: AnimatedAlign(
+                    duration: const Duration(milliseconds: 200),
+                    alignment:
+                        isDark ? Alignment.centerRight : Alignment.centerLeft,
+                    child: Container(
+                      width: 18,
+                      height: 18,
+                      margin: const EdgeInsets.symmetric(horizontal: 3),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: isDark ? AppColors.darkPrimary : Colors.white,
+                      ),
+                      child: Icon(
+                        isDark ? Icons.dark_mode : Icons.light_mode,
+                        size: 11,
+                        color: isDark ? AppColors.lime : Colors.orange,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              if (mobile) ...[
+                const SizedBox(width: 12),
+                Builder(
+                  builder: (ctx) => GestureDetector(
+                    onTap: () => Scaffold.of(ctx).openDrawer(),
+                    child: Icon(Icons.menu, color: theme.colorScheme.onPrimary),
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDrawer(BuildContext context) {
+    final theme = Theme.of(context);
     return Drawer(
+      backgroundColor: theme.colorScheme.surface,
       child: SafeArea(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              child: Align(
-                alignment: Alignment.bottomLeft,
-                child: Text(
-                  'Anish Chaulgain',
-                  style: GoogleFonts.ibmPlexMono(
-                      fontSize: 28,
-                      letterSpacing: 0.14,
-                      color: theme.colorScheme.onSurface),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
+              child: Text(
+                'AC.',
+                style: GoogleFonts.dmSans(
+                  fontSize: 32,
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.lime,
+                  letterSpacing: -1,
                 ),
               ),
             ),
-            Expanded(
-              child: ListView(
-                padding: EdgeInsets.zero,
-                children: [
-                  _buildDrawerItem(
-                    context,
-                    icon: Icons.home_outlined,
-                    label: 'Home',
-                    onTap: () {
-                      Navigator.pop(context);
-                      scrollTo(homeKey);
-                    },
+            const Divider(height: 1),
+            ...[
+              ('Home', Icons.home_outlined, homeKey),
+              ('Skills', Icons.code_outlined, skillsKey),
+              ('Projects', Icons.work_outline, projectsKey),
+              ('Experience', Icons.timeline_outlined, experienceKey),
+              ('Contact', Icons.mail_outline, contactKey),
+            ].map(
+              (item) => ListTile(
+                leading: Icon(
+                  item.$2,
+                  color: theme.colorScheme.onSurface,
+                  size: 20,
+                ),
+                title: Text(
+                  item.$1,
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                    color: theme.colorScheme.onSurface,
                   ),
-                  _buildDrawerItem(
-                    context,
-                    icon: Icons.work_outline,
-                    label: 'Projects',
-                    onTap: () {
-                      Navigator.pop(context);
-                      scrollTo(projectsKey);
-                    },
-                  ),
-                  _buildDrawerItem(
-                    context,
-                    icon: Icons.people_outline,
-                    label: 'Testimonials',
-                    onTap: () {
-                      Navigator.pop(context);
-                      scrollTo(testimonialKey);
-                    },
-                  ),
-                  _buildDrawerItem(
-                    context,
-                    icon: Icons.build_outlined,
-                    label: 'Recent Works',
-                    onTap: () {
-                      Navigator.pop(context);
-                      scrollTo(recentWorkKey);
-                    },
-                  ),
-                  _buildDrawerItem(
-                    context,
-                    icon: Icons.contact_mail_outlined,
-                    label: 'Get In Touch',
-                    onTap: () {
-                      Navigator.pop(context);
-                      scrollTo(contactKey);
-                    },
-                  ),
-                ],
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  scrollTo(item.$3);
+                },
               ),
             ),
-            const Divider(),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.facebook_outlined),
-                    iconSize: 28,
-                    tooltip: 'Facebook',
-                    onPressed: () {},
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.linked_camera_outlined),
-                    iconSize: 28,
-                    tooltip: 'LinkedIn',
-                    onPressed: () {},
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.alternate_email_outlined),
-                    iconSize: 28,
-                    tooltip: 'Email',
-                    onPressed: () {},
-                  ),
-                ],
+            ListTile(
+              leading: Icon(
+                Icons.description_outlined,
+                color: theme.colorScheme.onSurface,
+                size: 20,
               ),
+              title: Text(
+                'Resume',
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                  color: theme.colorScheme.onSurface,
+                ),
+              ),
+              onTap: () {
+                Navigator.pop(context);
+                openExternalUrl(PortfolioData.resumeUrl);
+              },
             ),
           ],
         ),
@@ -264,24 +299,49 @@ class _LandingPageState extends State<LandingPage> {
     );
   }
 
-  Widget _buildDrawerItem(BuildContext context,
-      {required IconData icon,
-      required String label,
-      required VoidCallback onTap}) {
-    var theme = Theme.of(context);
-    return ListTile(
-      title: Text(
-        label,
-        style: GoogleFonts.ibmPlexMono(
-            fontSize: 14,
-            letterSpacing: 0.14,
-            color: theme.colorScheme.onSurface),
-      ),
-      onTap: onTap,
-      horizontalTitleGap: 8,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 24),
-      hoverColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+  Widget _buildFooter(BuildContext context, double hPad) {
+    final theme = Theme.of(context);
+    final mobile = isMobile(context);
+
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: hPad, vertical: 32.h),
+      color: theme.colorScheme.primary,
+      child: mobile
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '© 2025 ${PortfolioData.name}',
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    color: theme.colorScheme.onPrimary,
+                  ),
+                ),
+                SizedBox(height: 16.h),
+                Text(
+                  'Built with Flutter',
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    color: theme.colorScheme.onPrimary,
+                  ),
+                ),
+              ],
+            )
+          : Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  '© 2025 ${PortfolioData.name}',
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    color: theme.colorScheme.onPrimary,
+                  ),
+                ),
+                Text(
+                  'Built with Flutter',
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    color: theme.colorScheme.onPrimary,
+                  ),
+                ),
+              ],
+            ),
     );
   }
 }
