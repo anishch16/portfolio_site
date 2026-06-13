@@ -86,7 +86,7 @@ class _SkillCategory extends StatelessWidget {
               height: 6,
               decoration: const BoxDecoration(
                 shape: BoxShape.circle,
-                color: AppColors.lime,
+                color: AppColors.mainColor,
               ),
             ),
             const SizedBox(width: 8),
@@ -134,12 +134,12 @@ class _SkillChipState extends State<_SkillChip> {
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
         decoration: BoxDecoration(
           color: _hovered
-              ? AppColors.lime.withAlphaFraction(0.12)
+              ? AppColors.mainColor.withAlphaFraction(0.12)
               : theme.colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(4),
           border: Border.all(
             color: _hovered
-                ? AppColors.lime.withAlphaFraction(0.6)
+                ? AppColors.mainColor.withAlphaFraction(0.6)
                 : theme.colorScheme.outline.withAlphaFraction(0.2),
           ),
         ),
@@ -148,7 +148,7 @@ class _SkillChipState extends State<_SkillChip> {
           style: theme.textTheme.labelLarge?.copyWith(
             fontSize: 12,
             color: _hovered
-                ? AppColors.lime
+                ? AppColors.mainColor
                 : theme.colorScheme.onSurface.withAlphaFraction(0.75),
             fontWeight: _hovered ? FontWeight.w600 : FontWeight.w400,
           ),

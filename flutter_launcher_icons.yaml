@@ -1,0 +1,7 @@
+flutter_launcher_icons:
+  image_path: "assets/images/icon.png" # Default fallback icon
+
+  web:
+    generate: true
+    image_path: "assets/images/logo.png" # 1024x1024 PNG recommended
+    theme_color: "#0175C2" 

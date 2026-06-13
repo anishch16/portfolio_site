@@ -40,7 +40,7 @@ class _ProjectCardState extends State<ProjectCard> {
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
               color: _hovered
-                  ? AppColors.lime.withAlphaFraction(0.35)
+                  ? AppColors.mainColor.withAlphaFraction(0.35)
                   : theme.colorScheme.outline.withAlphaFraction(0.12),
             ),
           ),
@@ -106,14 +106,14 @@ class _ProjectCardState extends State<ProjectCard> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(4),
                               border: Border.all(
-                                color: AppColors.lime.withAlphaFraction(0.35),
+                                color: AppColors.mainColor.withAlphaFraction(0.35),
                               ),
                             ),
                             child: Text(
                               project.metric!,
                               style: theme.textTheme.labelMedium?.copyWith(
                                 fontSize: 9,
-                                color: AppColors.lime,
+                                color: AppColors.mainColor,
                               ),
                             ),
                           ),
@@ -169,7 +169,7 @@ class _ProjectCardState extends State<ProjectCard> {
                                 Icons.shop,
                                 size: 14,
                                 color: _hovered
-                                    ? AppColors.lime
+                                    ? AppColors.mainColor
                                     : theme.colorScheme.onSurface
                                         .withAlphaFraction(0.45),
                               ),
@@ -179,7 +179,7 @@ class _ProjectCardState extends State<ProjectCard> {
                                 style: theme.textTheme.labelLarge?.copyWith(
                                   fontSize: 12,
                                   color: _hovered
-                                      ? AppColors.lime
+                                      ? AppColors.mainColor
                                       : theme.colorScheme.onSurface
                                           .withAlphaFraction(0.55),
                                   fontWeight: FontWeight.w600,

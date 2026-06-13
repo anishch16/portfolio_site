@@ -25,8 +25,9 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
-  final String _fullCommand = r'$ flutter run anish.dart';
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
+  final String _fullCommand = r'$ flutter run chaulagain_anish.dart';
   String _displayedCommand = '';
   bool _cursorVisible = true;
   Timer? _typeTimer;
@@ -81,7 +82,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     final mobile = isMobile(context);
     final hPad = sectionHorizontalPadding(context);
     final headlineSize = mobile ? 42.0 : 64.0;
-    final avatarSize = mobile ? 220.0 : 280.0;
+    final avatarSize = mobile ? 220.0 : 380.0;
 
     return Container(
       key: widget.homeKey,
@@ -115,7 +116,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Expanded(
-                      flex: 6,
+                      flex: 8,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -157,7 +158,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             _displayedCommand,
             style: GoogleFonts.jetBrainsMono(
               fontSize: 13,
-              color: AppColors.lime,
+              color: AppColors.mainColor,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -167,7 +168,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             child: Container(
               width: 8,
               height: 14,
-              color: AppColors.lime,
+              color: AppColors.mainColor,
             ),
           ),
         ],
@@ -175,7 +176,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     );
   }
 
-  Widget _buildHeroText(BuildContext context, double headlineSize, bool mobile) {
+  Widget _buildHeroText(
+      BuildContext context, double headlineSize, bool mobile) {
     final theme = Theme.of(context);
     return FadeTransition(
       opacity: _fadeAnim,
@@ -198,7 +200,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                   style: theme.textTheme.displaySmall?.copyWith(
                     fontSize: headlineSize,
                     fontWeight: FontWeight.w800,
-                    color: AppColors.lime,
+                    color: AppColors.mainColor,
                     height: 1.1,
                     letterSpacing: -2,
                   ),
@@ -216,14 +218,11 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             ),
           ),
           SizedBox(height: 20.h),
-          SizedBox(
-            width: mobile ? double.infinity : 520,
-            child: Text(
-              PortfolioData.professionalSummary,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onPrimary.withAlphaFraction(0.55),
-                height: 1.8,
-              ),
+          Text(
+            PortfolioData.professionalSummary,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onPrimary.withAlphaFraction(0.55),
+              height: 1.8,
             ),
           ),
         ],
@@ -236,15 +235,16 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       width: size,
       height: size,
       decoration: const BoxDecoration(
-        shape: BoxShape.circle,
+        borderRadius: BorderRadius.all(Radius.circular(50)),
+        // shape: BoxShape.circle,
         image: DecorationImage(
-          image: AssetImage('assets/images/my_image.jpeg'),
+          image: AssetImage('assets/images/portfolio.jpeg'),
           fit: BoxFit.cover,
         ),
       ),
       foregroundDecoration: BoxDecoration(
-        shape: BoxShape.circle,
-        border: Border.all(color: AppColors.lime, width: 3),
+        borderRadius: const BorderRadius.all(Radius.circular(50)),
+        border: Border.all(color: AppColors.mainColor, width: 3),
       ),
     );
   }
@@ -268,7 +268,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           ),
           PortfolioButton(
             label: 'Download resume',
-            variant: PortfolioButtonVariant.ghost,
+            trailingIcon: Icons.download,
+            variant: PortfolioButtonVariant.outline,
             onTap: widget.onResumeTap,
           ),
         ],
@@ -316,7 +317,8 @@ class _CompanyChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        border: Border.all(color: theme.colorScheme.outline.withAlphaFraction(0.3)),
+        border:
+            Border.all(color: theme.colorScheme.outline.withAlphaFraction(0.3)),
         borderRadius: BorderRadius.circular(4),
       ),
       child: Text(

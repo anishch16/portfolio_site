@@ -25,6 +25,7 @@ class PortfolioData {
       company: 'Ankaek Pvt. Ltd.',
       role: 'Flutter Developer',
       dateRange: '04/2024 – Present',
+      website: "https://ankaek.com/",
       summary:
           'Shipped production Flutter apps across social, identity, and parking products — from feed modules and push notifications to encrypted multi-persona profiles and payment integrations.',
       projectNames: ['a-OK', 'Connect Persona', 'Lahv+ Parking'],
@@ -33,6 +34,7 @@ class PortfolioData {
       company: 'Ayata Incorporation',
       role: 'Flutter Developer',
       dateRange: '01/2023 – 04/2024',
+      website: "https://ayata.com.np",
       summary:
           'Built and maintained high-traffic consumer and field-worker apps spanning media streaming, offline healthcare data collection, and nationwide bus ticketing.',
       projectNames: ['Dishhome', 'AshaConnect', 'Kilindar'],
@@ -52,6 +54,7 @@ class ExperienceEntry {
   final String role;
   final String dateRange;
   final String summary;
+  final String website;
   final List<String> projectNames;
 
   const ExperienceEntry({
@@ -60,6 +63,7 @@ class ExperienceEntry {
     required this.dateRange,
     required this.summary,
     required this.projectNames,
+    required this.website,
   });
 }
 

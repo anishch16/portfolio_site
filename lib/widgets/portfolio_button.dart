@@ -41,7 +41,7 @@ class _PortfolioButtonState extends State<PortfolioButton> {
     switch (widget.variant) {
       case PortfolioButtonVariant.primary:
         background =
-            _hovered ? AppColors.limeDeep : AppColors.lime;
+            _hovered ? AppColors.mainColorDeep : AppColors.mainColor;
         foreground = AppColors.darkPrimary;
         border = null;
       case PortfolioButtonVariant.outline:
@@ -51,7 +51,7 @@ class _PortfolioButtonState extends State<PortfolioButton> {
         foreground = theme.colorScheme.onPrimary;
         border = Border.all(
           color: _hovered
-              ? AppColors.lime.withAlphaFraction(0.6)
+              ? AppColors.mainColor.withAlphaFraction(0.6)
               : theme.colorScheme.outline.withAlphaFraction(0.5),
         );
       case PortfolioButtonVariant.ghost:

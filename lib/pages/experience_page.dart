@@ -4,6 +4,9 @@ import 'package:portfolio_site/data/portfolio_data.dart';
 import 'package:portfolio_site/theme/colors.dart';
 import 'package:portfolio_site/utils/viewport.dart';
 import 'package:portfolio_site/widgets/section_label.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../utils/url_utils.dart';
 
 class ExperiencePage extends StatelessWidget {
   final Key experienceKey;
@@ -48,7 +51,7 @@ class ExperiencePage extends StatelessWidget {
             );
           }),
           SizedBox(height: 48.h),
-          _EducationBlock(education: PortfolioData.education),
+          const _EducationBlock(education: PortfolioData.education),
         ],
       ),
     );
@@ -85,7 +88,7 @@ class _CompanyBlock extends StatelessWidget {
                   height: 10,
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
-                    color: AppColors.lime,
+                    color: AppColors.mainColor,
                   ),
                 ),
                 if (showTimelineTail)
@@ -138,11 +141,14 @@ class _CompanyContent extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      entry.company,
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        color: AppColors.lime,
-                        fontWeight: FontWeight.w700,
+                    InkWell(
+                    onTap: () => openExternalUrl(entry.website),
+                      child: Text(
+                        entry.company,
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          color: AppColors.mainColor,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -263,7 +269,7 @@ class _EducationBlock extends StatelessWidget {
                     Text(
                       education.institution,
                       style: theme.textTheme.bodyLarge?.copyWith(
-                        color: AppColors.lime,
+                        color: AppColors.mainColor,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -295,7 +301,7 @@ class _EducationBlock extends StatelessWidget {
                         Text(
                           education.institution,
                           style: theme.textTheme.bodyLarge?.copyWith(
-                            color: AppColors.lime,
+                            color: AppColors.mainColor,
                             fontWeight: FontWeight.w600,
                           ),
                         ),

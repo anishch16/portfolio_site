@@ -78,6 +78,7 @@ class _LandingPageState extends State<LandingPage> {
           SingleChildScrollView(
             controller: _scrollController,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(height: 72.h),
                 HomePage(
@@ -120,7 +121,8 @@ class _LandingPageState extends State<LandingPage> {
           duration: const Duration(milliseconds: 250),
           height: 64.h,
           decoration: BoxDecoration(
-            color: theme.colorScheme.primary.withAlphaFraction(scrolled ? 0.88 : 0.6),
+            color: theme.colorScheme.primary
+                .withAlphaFraction(scrolled ? 0.88 : 0.6),
             border: scrolled
                 ? Border(
                     bottom: BorderSide(
@@ -133,14 +135,40 @@ class _LandingPageState extends State<LandingPage> {
           padding: EdgeInsets.symmetric(horizontal: hPad),
           child: Row(
             children: [
-              Text(
-                'AC.',
-                style: GoogleFonts.dmSans(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w800,
-                  color: AppColors.lime,
-                  letterSpacing: -1,
-                ),
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  return Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        '< ',
+                        style: GoogleFonts.dmSans(
+                          fontSize: 24.sp,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.mainColor,
+                        ),
+                      ),
+                      Text(
+                        'AC',
+                        style: GoogleFonts.dmSans(
+                          fontSize: 24.sp,
+                          fontWeight: FontWeight.w900,
+                          color: AppColors.mainColor,
+                          letterSpacing: -0.5,
+                        ),
+                      ),
+                      Text(
+                        ' />',
+                        style: GoogleFonts.dmSans(
+                          fontSize: 24.sp,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.mainColor,
+                        ),
+                      ),
+                    ],
+                  );
+                },
               ),
               if (!mobile) ...[
                 const Spacer(),
@@ -187,7 +215,9 @@ class _LandingPageState extends State<LandingPage> {
                   height: 24,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
-                    color: isDark ? AppColors.lime : theme.colorScheme.outline,
+                    color: isDark
+                        ? AppColors.mainColor
+                        : theme.colorScheme.outline,
                   ),
                   child: AnimatedAlign(
                     duration: const Duration(milliseconds: 200),
@@ -204,7 +234,7 @@ class _LandingPageState extends State<LandingPage> {
                       child: Icon(
                         isDark ? Icons.dark_mode : Icons.light_mode,
                         size: 11,
-                        color: isDark ? AppColors.lime : Colors.orange,
+                        color: isDark ? AppColors.mainColor : Colors.orange,
                       ),
                     ),
                   ),
@@ -241,7 +271,7 @@ class _LandingPageState extends State<LandingPage> {
                 style: GoogleFonts.dmSans(
                   fontSize: 32,
                   fontWeight: FontWeight.w800,
-                  color: AppColors.lime,
+                  color: AppColors.mainColor,
                   letterSpacing: -1,
                 ),
               ),

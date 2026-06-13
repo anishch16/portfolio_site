@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  // Accent (Swapped to Facebook Vibrant Blue & Deep Blue)
-  static const lime = Color(0xFF1877F2);     // Facebook Primary Blue
-  static const limeDeep = Color(0xFF0056B3); // Focused / Darker Press State Blue
+  static const mainColor = Color(0xFF1877F2);     
+  static const mainColorDeep = Color(0xFF0056B3); // Focused / Darker Press State Blue
 
   // Light Theme (Clean Facebook Light Palette)
-  static const lightPrimary = Color(0xFFF0F2F5); // Facebook Background Grey
+  static const lightPrimary = Color(0xFFF0F2F5); // Background Grey
   static const lightOnPrimary = Color(0xFF050505); // High Contrast Dark Text
   static const lightPrimaryContainer = Color(0xFF050505);
   static const lightOnPrimaryContainer = Color(0xFFF0F2F5);
@@ -18,7 +17,7 @@ class AppColors {
   static const lightOnTertiary = Color(0xFFFFFFFF);
   static const lightTertiaryContainer = Color(0xFFE4E6EB);
   static const lightOnTertiaryContainer = Color(0xFF050505);
-  static const lightError = Color(0xFFFA383E); // Facebook Error Red
+  static const lightError = Color(0xFFFA383E); // Error Red
   static const lightOnError = Color(0xFFFFFFFF);
   static const lightErrorContainer = Color(0xFFFFEBEB);
   static const lightOnErrorContainer = Color(0xFFFA383E);
@@ -32,12 +31,12 @@ class AppColors {
   static const lightOnInverseSurface = Color(0xFFF0F2F5);
   static const lightInversePrimary = Color(0xFF1877F2);
 
-  // Dark Theme (Rich Deep Midnight Facebook Dark Base)
-  static const darkPrimary = Color(0xFF18191A); // Facebook Dark Surface
+  // Dark Theme (Rich Deep Midnight Dark Base)
+  static const darkPrimary = Color(0xFF18191A); // Dark Surface
   static const darkOnPrimary = Color(0xFFE4E6EB);
-  static const darkPrimaryContainer = Color(0xFF242526); // Facebook Card Dark Grey
+  static const darkPrimaryContainer = Color(0xFF242526); // Card Dark Grey
   static const darkOnPrimaryContainer = Color(0xFFE4E6EB);
-  static const darkSecondary = Color(0xFF1877F2); // Punchy Facebook Blue
+  static const darkSecondary = Color(0xFF1877F2); // Punchy Blue
   static const darkOnSecondary = Color(0xFFFFFFFF);
   static const darkSecondaryContainer = Color(0xFF263951); // Dark Blue Interactive Fill
   static const darkOnSecondaryContainer = Color(0xFF4599FF);
