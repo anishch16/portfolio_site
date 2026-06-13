@@ -4,8 +4,6 @@ import 'package:portfolio_site/data/portfolio_data.dart';
 import 'package:portfolio_site/theme/colors.dart';
 import 'package:portfolio_site/utils/viewport.dart';
 import 'package:portfolio_site/widgets/section_label.dart';
-import 'package:url_launcher/url_launcher.dart';
-
 import '../utils/url_utils.dart';
 
 class ExperiencePage extends StatelessWidget {

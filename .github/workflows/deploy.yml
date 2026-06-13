@@ -1,9 +1,10 @@
 name: Deploy to GitHub Pages
 
 on:
+  workflow_dispatch: # This enables the manual "Run workflow" button in GitHub Actions
   push:
     branches:
-      - main # Change this to 'master' if your default branch is master
+      - main
 permissions:
   contents: write
 jobs:
